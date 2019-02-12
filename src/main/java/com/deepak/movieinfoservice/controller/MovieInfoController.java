@@ -1,0 +1,45 @@
+package com.deepak.movieinfoservice.controller;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.deepak.movieinfoservice.model.Movie;
+
+@RestController
+@RequestMapping ( "/movies" )
+public class MovieInfoController
+{
+   private static List< Movie > movieList = getAllMovies();
+   
+   @RequestMapping ( method = RequestMethod.GET, path = "/{movieId}" )
+   public Movie getMovieDetails( @PathVariable ( "movieId" ) String movieId )
+   {
+      Optional<Movie> item =  movieList.stream().filter( movie -> movie.getMovieId().equals( movieId ) ).findAny();
+      if( item.isPresent() )
+      {
+         return item.get();
+      }
+      else
+      {
+         throw new IllegalArgumentException(" Movie Not Found ");
+      }
+   }
+   
+
+   private static List< Movie > getAllMovies()
+   {
+      return Stream.< Movie > builder()
+                   .add( new Movie( "1234", "Transformers", "Description for Transformers" ) )
+                   .add( new Movie( "1236", "Big Lebowski", "Description for Big Lebowski" ) )
+                   .add( new Movie( "1237", "Titanic", "Description for Titanic" ) )
+                   .build()
+                   .collect( Collectors.toList() );
+   }
+}
