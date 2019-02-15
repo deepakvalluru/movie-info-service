@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,11 +17,15 @@ import com.deepak.movieinfoservice.model.Movie;
 @RequestMapping ( "/movies" )
 public class MovieInfoController
 {
+   @Value("${eureka.instance.instance-id}")
+   private String instanceId;
+   
    private static List< Movie > movieList = getAllMovies();
    
    @RequestMapping ( method = RequestMethod.GET, path = "/{movieId}" )
    public Movie getMovieDetails( @PathVariable ( "movieId" ) String movieId )
    {
+      System.out.println( "Instance Id for movie-info-service : " + instanceId );
       Optional<Movie> item =  movieList.stream().filter( movie -> movie.getMovieId().equals( movieId ) ).findAny();
       if( item.isPresent() )
       {
