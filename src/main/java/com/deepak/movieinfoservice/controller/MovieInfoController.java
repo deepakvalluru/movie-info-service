@@ -43,10 +43,11 @@ public class MovieInfoController
    @RequestMapping ( method = RequestMethod.GET, path = "/{movieId}" )
    public Movie getMovieDetails( @PathVariable ( "movieId" ) String movieId )
    {
-      logger.debug( "Instance Id for movie-info-service : {}", instanceId );
+      logger.debug( "Getting movie for movie-id : {}", movieId );
       Optional<Movie> item =  movieList.stream().filter( movie -> movie.getMovieId().equals( movieId ) ).findAny();
       if( item.isPresent() )
       {
+         logger.debug( "Movie Details - {}", item.get() );
          return item.get();
       }
       else
