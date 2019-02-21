@@ -1,10 +1,13 @@
 package com.deepak.movieinfoservice.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +22,8 @@ import com.deepak.movieinfoservice.model.Movie;
 @RequestMapping ( "/movies" )
 public class MovieInfoController
 {
+   private static final Logger logger = LoggerFactory.getLogger( MovieInfoController.class );
+   
    @Value("${eureka.instance.instance-id}")
    private String instanceId;
    
@@ -30,13 +35,15 @@ public class MovieInfoController
    @RequestMapping( method=RequestMethod.GET, path="/message")
    public String getMessage()
    {
-      return this.message + " - with instance id - "+ this.instanceId;
+      String message = this.message + " - with instance id - "+ this.instanceId + " at this time - " + LocalDateTime.now(); 
+      logger.debug( "Here's the message : {}", message );
+      return message;
    }
    
    @RequestMapping ( method = RequestMethod.GET, path = "/{movieId}" )
    public Movie getMovieDetails( @PathVariable ( "movieId" ) String movieId )
    {
-      System.out.println( "Instance Id for movie-info-service : " + instanceId );
+      logger.debug( "Instance Id for movie-info-service : {}", instanceId );
       Optional<Movie> item =  movieList.stream().filter( movie -> movie.getMovieId().equals( movieId ) ).findAny();
       if( item.isPresent() )
       {
@@ -48,7 +55,6 @@ public class MovieInfoController
       }
    }
    
-
    private static List< Movie > getAllMovies()
    {
       return Stream.< Movie > builder()
