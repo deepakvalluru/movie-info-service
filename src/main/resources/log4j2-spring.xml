@@ -2,20 +2,20 @@
 <Configuration status="WARN">
 	<properties>
 		<property name="log-path" value="${bundle:application:logging.file.path}"/>
-		<property name="app-name" value="${bundle:application:spring.application.name}.log"/>
+		<property name="app-name" value="${bundle:application:spring.application.name}"/>
 	</properties>
 	<Appenders>
 		<Console name="Console-Appender" target="SYSTEM_OUT">
 			<PatternLayout>
 				<pattern>
-					[%d{MM:dd HH:mm:ss.SSS}] [%level] [%logger{36}] - %msg%n
+					[%d{MM:dd HH:mm:ss.SSS}] [${app-name}] [%X{X-B3-TraceId}] [%X{X-B3-SpanId}] [%level] [%logger{36}] - %msg%n
 				</pattern>
 			</PatternLayout>
 		</Console>
-		<File name="App-File-Appender" fileName="${log-path}/${app-name}">
+		<File name="App-File-Appender" fileName="${log-path}/${app-name}.log">
 			<PatternLayout>
 				<pattern>
-					[%d{MM:dd HH:mm:ss.SSS}] [%level] [%logger{36}] - %msg%n
+					[%d{MM:dd HH:mm:ss.SSS}] [${app-name}] [%X{X-B3-TraceId}] [%X{X-B3-SpanId}] [%level] [%logger{36}] - %msg%n
 				</pattern>
 			</PatternLayout>
 		</File>
